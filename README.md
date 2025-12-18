@@ -5,22 +5,7 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
+ 
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
@@ -83,16 +68,244 @@ Check out a few resources that may come in handy when working with NestJS:
 - To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
 - Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Blog & Post Management System
 
-## Stay in touch
+A fully-featured **Blog & Post Management System** built with **NestJS**, **TypeORM**, **PostgreSQL**, **Redis**, and **BullMQ**. This project demonstrates modern backend architecture with **role-based access control (RBAC)**, caching, file uploads, queue-based background processing, and RESTful API design.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## Table of Contents
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+* [Features](#features)
+* [Tech Stack](#tech-stack)
+* [Architecture Overview](#architecture-overview)
+* [Folder Structure](#folder-structure)
+* [Modules & Functionality](#modules--functionality)
+
+  * [Users Module](#users-module)
+  * [Posts Module](#posts-module)
+  * [Comments Module](#comments-module)
+  * [Categories Module](#categories-module)
+  * [Permissions Module](#permissions-module)
+  * [Common Module](#common-module)
+* [Caching & Queue](#caching--queue)
+* [Database Schema](#database-schema)
+* [Authentication & Authorization](#authentication--authorization)
+* [File Upload Handling](#file-upload-handling)
+* [Pagination & Search](#pagination--search)
+* [Development Setup](#development-setup)
+* [Running the Project](#running-the-project)
+* [API Documentation](#api-documentation)
+* [Notes & Best Practices](#notes--best-practices)
+
+---
+
+## Features
+
+* User registration & JWT authentication
+* Role-based access control (Admin / User)
+* CRUD operations for posts, categories, and comments
+* File uploads for posts with Multer & disk storage
+* Background file processing with **BullMQ queues**
+* Caching with **Redis** for faster reads
+* Pagination and search functionality
+* Detailed API responses using **DTOs** and class serialization
+* Strict TypeScript setup with `tsconfig` configurations
+
+---
+
+## Tech Stack
+
+* **Backend Framework:** NestJS
+* **Database:** PostgreSQL (via TypeORM)
+* **Caching:** Redis (cache-manager-ioredis-yet)
+* **Background Jobs:** BullMQ
+* **Validation:** class-validator & class-transformer
+* **Authentication:** JWT via Passport
+* **File Uploads:** Multer
+* **API Documentation:** Swagger
+* **Language:** TypeScript
+* **Build Tools:** tsconfig.json / tsconfig.build.json
+
+---
+
+## Architecture Overview
+
+The project follows a **modular architecture**:
+
+1. **Modules**: Each feature (Users, Posts, Comments, Categories, Permissions) is a separate NestJS module.
+2. **Controllers**: Handle HTTP requests and responses.
+3. **Services**: Contain business logic and interact with database & cache.
+4. **Entities**: Represent database tables using TypeORM.
+5. **DTOs**: Data Transfer Objects enforce validation and response formatting.
+6. **Guards & Decorators**: Implement role-based permissions and JWT authentication.
+7. **Interceptors**: Transform API responses globally.
+8. **Middleware**: Logs HTTP requests.
+
+---
+
+## Folder Structure
+
+```
+src/
+├─ common/                 # Global middleware, guards, decorators, interceptors
+├─ users/                  # User management module
+├─ posts/                  # Post management with attachments & background processing
+├─ comments/               # Comments management module
+├─ category/               # Category management module
+├─ permissions/            # Role-based permission management
+├─ redis.module.ts         # Global Redis cache configuration
+├─ main.ts                 # Entry point of the application
+├─ tsconfig.json           # Base TypeScript config
+├─ tsconfig.build.json     # Production TypeScript build config
+```
+
+---
+
+## Modules & Functionality
+
+### Users Module
+
+* **Entity**: Stores user data with `id`, `name`, `email`, `password`, `role`.
+* **Roles**: `USER` and `ADMIN`.
+* **Service**: Handles CRUD and role changes.
+* **DTOs**: Validate input and control output fields.
+
+### Posts Module
+
+* **Entity**: `Post` entity with `title`, `content`, `author`, `category`, `attachments`.
+* **CRUD**: Create, read, update, delete posts.
+* **File Upload**: Users can upload multiple attachments per post.
+* **Background Queue**: Uses BullMQ for async attachment processing.
+* **Caching**: Frequently accessed posts are cached in Redis.
+* **Pagination & Search**: Query parameters for page, limit, and search.
+
+### Comments Module
+
+* **Entity**: `Comment` linked to `Post` and `User`.
+* **CRUD**: Users can create, update, delete comments.
+* **Authorization**: Only comment owners or admins can modify/delete.
+
+### Categories Module
+
+* **Entity**: `Category` with `name` and `description`.
+* **CRUD**: Create, read, update, delete categories.
+* **Relations**: Categories can have multiple posts.
+
+### Permissions Module
+
+* **Enums**: `Permission` enum defines all possible actions.
+* **RBAC**: `ROLE_PERMISSIONS` map associates roles with allowed permissions.
+* **Cache**: Permissions are cached in Redis for fast access.
+* **Guards**: `PermissionsGuard` ensures route-level access control.
+
+### Common Module
+
+* **JwtAuthGuard**: Skips authentication for public routes.
+* **RolesGuard**: Validates user roles using custom decorators.
+* **Public Decorator**: Marks endpoints as public.
+* **Logger Middleware**: Logs all HTTP requests.
+* **Response Interceptor**: Wraps responses with `{ success, data }`.
+* **Multer Config**: Handles disk storage for file uploads.
+
+---
+
+## Caching & Queue
+
+* **Redis**: Caches posts, permissions, and frequently accessed data.
+* **BullMQ**: Handles background tasks like file processing for uploaded attachments.
+* **Benefits**:
+
+  * Reduces DB load
+  * Improves API response time
+  * Handles heavy async tasks without blocking requests
+
+---
+
+## Database Schema
+
+* **User**: `id, name, email, password, role`
+* **Post**: `id, title, content, attachments, authorId, categoryId`
+* **Comment**: `id, text, postId, userId`
+* **Category**: `id, name, description`
+
+Relationships:
+
+* User → Post (One-to-Many)
+* Post → Comment (One-to-Many)
+* Category → Post (One-to-Many)
+* User → Comment (One-to-Many)
+
+---
+
+## Authentication & Authorization
+
+* **JWT**: Users authenticate with email/password and receive JWT token.
+* **Role-Based Access**: Admins have full access; Users have restricted actions.
+* **Decorators & Guards**:
+
+  * `@Permissions()` for action-level access
+  * `@Roles()` for role-level access
+
+---
+
+## File Upload Handling
+
+* **Multer Disk Storage**: Files saved in `uploads/posts/`
+* **Unique Filenames**: Combines timestamp + random number + original extension
+* **Validation**: Maximum file size = 2MB
+* **Queue Processing**: After upload, files are processed asynchronously and DB is updated.
+
+---
+
+## Pagination & Search
+
+* **Posts Endpoint** supports:
+
+  * `page`: Page number (default = 1)
+  * `limit`: Number of posts per page (default = 10)
+  * `search`: Search term on `title` or `content`
+* **Redis caching** ensures fast repeated queries.
+
+---
+
+## Development Setup
+
+```bash
+# Clone repository
+git clone <repo-url>
+cd <project-folder>
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Set DB credentials, Redis host/port, JWT secret
+
+# Run DB migrations (if any)
+npm run typeorm:migrate
+
+# Start development server
+npm run start:dev
+```
+
+---
+
+## Running the Project
+
+* **Development:** `npm run start:dev`
+* **Production build:** `npm run build && npm run start:prod`
+* **Queue Worker:** BullMQ is integrated into the app and runs automatically with NestJS
+
+---
+
+## API Documentation
+
+* Swagger UI is available at: `http://localhost:3000/api`
+* All endpoints are documented with request/response DTOs.
+* Includes authentication, file uploads, pagination, and RBAC usage examples.
+
+---
